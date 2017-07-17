@@ -1,5 +1,5 @@
 
-# Walkthrough: Scoring a trained CNTK model with PySpark on a Microsoft Azure HDInsight cluster
+# Walkthrough: Scoring a trained CNTK model with PySpark
 
 
 This notebook demonstrates how a trained [Microsoft Cognitive Toolkit (CNTK)](https://github.com/Microsoft/CNTK/wiki) deep learning model can be applied to files in a distributed and scalable fashion using the [Spark Python API](http://spark.apache.org/docs/2.1.0/programming-guide.html) (PySpark). An image classification model pretrained on the [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) dataset is applied to 10,000 withheld images. A sample of the images is shown below along with their classes:
