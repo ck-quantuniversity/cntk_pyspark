@@ -6,7 +6,6 @@ This notebook demonstrates how a trained [Microsoft Cognitive Toolkit (CNTK)](ht
 
 <img src="https://cntk.ai/jup/201/cifar-10.png" width=500 height=500>
 
-To begin, follow the instructions below to set up a cluster and storage account. You will be prompted to upload a copy of this notebook to the cluster, where you can continue following the walkthrough by executing the PySpark code cells.
 
 
 ## Source code
