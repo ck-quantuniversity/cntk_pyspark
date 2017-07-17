@@ -1,9 +1,8 @@
 
 # Walkthrough: Scoring a trained CNTK model with PySpark on a Microsoft Azure HDInsight cluster
 
-by Miruna Oprescu, Sudarshan Raghunathan, and Mary Wahl, 2017
 
-This notebook demonstrates how a trained [Microsoft Cognitive Toolkit (CNTK)](https://github.com/Microsoft/CNTK/wiki) deep learning model can be applied to files in an [Azure Blob Storage Account](https://azure.microsoft.com/en-us/services/storage/blobs/) in a distributed and scalable fashion using the [Spark Python API](http://spark.apache.org/docs/2.1.0/programming-guide.html) (PySpark) on a Microsoft Azure HDInsight cluster. An image classification model pretrained on the [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) dataset is applied to 10,000 withheld images. A sample of the images is shown below along with their classes:
+This notebook demonstrates how a trained [Microsoft Cognitive Toolkit (CNTK)](https://github.com/Microsoft/CNTK/wiki) deep learning model can be applied to files in a distributed and scalable fashion using the [Spark Python API](http://spark.apache.org/docs/2.1.0/programming-guide.html) (PySpark). An image classification model pretrained on the [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) dataset is applied to 10,000 withheld images. A sample of the images is shown below along with their classes:
 
 <img src="https://cntk.ai/jup/201/cifar-10.png" width=500 height=500>
 
@@ -21,12 +20,6 @@ To begin, follow the instructions below to set up a cluster and storage account.
    - [Score the images on worker nodes](#map)
    - [Evaluate model accuracy](#evaluate)
 
-<a name="setup"></a>
-## Install CNTK on an HDInsight Spark cluster and upload the example Jupyter Notebook
-
-Follow the instructions in the [Azure Documentation](https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apache-spark-microsoft-cognitive-toolkit) to 
-get your HDInsight cluster ready and upload the Jupyter Notebook. The steps below are covered in the Jupyter Notebook itself.
-
 <a name="images"></a>
 ## Load sample images into a Spark Resiliant Distributed Dataset or RDD
 
@@ -37,12 +30,18 @@ We will now use Python to obtain the [CIFAR-10](https://www.cs.toronto.edu/~kriz
 
 ```python
 from cntk import load_model
+import findspark
+findspark.init('/root/spark-2.1.0-bin-hadoop2.6')
 import os
 import numpy as np
 import pandas as pd
 import pickle
 import sys
 from pyspark import SparkFiles
+from pyspark import SparkContext
+from pyspark.sql.session import SparkSession
+sc =SparkContext()
+spark = SparkSession(sc)
 import tarfile
 from urllib.request import urlretrieve
 import xml.etree.ElementTree
@@ -97,15 +96,12 @@ spark.createDataFrame(image_df).coalesce(1).write.mode("overwrite").csv("/tmp/ci
 
 
 ```python
-%%local
 import pandas as pd
 import numpy as np
 %matplotlib inline
 import matplotlib.pyplot as plt
 from glob import glob
 
-!rm -rf /tmp/cifar_image
-!hdfs dfs -copyToLocal /tmp/cifar_image /tmp/cifar_image
 image_df = pd.read_csv(glob('/tmp/cifar_image/*.csv')[0])
 plt.figure(figsize=(15,1))
 for i, col in enumerate(image_df.columns):
@@ -219,7 +215,6 @@ spark.createDataFrame(df).coalesce(1).write.mode("overwrite").csv("/tmp/cifar_sc
 
 
 ```python
-%%local
 import pandas as pd
 import numpy as np
 %matplotlib inline
@@ -228,8 +223,6 @@ from sklearn.metrics import confusion_matrix
 import os
 from glob import glob
 
-!rm -rf /tmp/cifar_scores
-!hdfs dfs -copyToLocal /tmp/cifar_scores /tmp/cifar_scores
 df = pd.read_csv(glob('/tmp/cifar_scores/*.csv')[0])
 print('Constructing a confusion matrix with the first {} samples'.format(len(df.index)))
 
