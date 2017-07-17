@@ -18,8 +18,11 @@ Please see the file 'CNTK_model_scoring_on_Spark_walkthrough.ipynb'.
 https://hub.docker.com/r/rainite/cntk_with_spark_final/
 
 This docker has installed all of the required models and can execute on a built-in jupyter notebook.
-After instance, type these 2 set-up command line to run the jupyter notebook.
-
+After instance, type these 2 set-up command lines to run the jupyter notebook.
+```shell
 docker run -d -p 8888:8888 --name cntk-jupyter-notebooks -t cntk_with_spark_final  
+```
+```shell
 docker exec -it cntk-jupyter-notebooks bash -c "source /cntk/activate-cntk && jupyter-notebook --no-browser --port=8888 --ip=0.0.0.0 --notebook-dir=/cntk/Tutorials --allow-root"
+```
 
